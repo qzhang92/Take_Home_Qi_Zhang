@@ -72,7 +72,7 @@ When MVP is complete, we will move to our deferred work. We will focus on harden
 | **Phase 5: Automation & Reliability** | **Workflow Orchestration and Monitoring** | 3 - 4 Weeks | **Job Scheduling:** Implement **Airflow/Prefect** workflow to manage the scheduled, periodic execution of the **Batch Re-clustering** (Step 5).<br> **Containerization:** Dockerize the entire application for reliable deployment in a cloud environment (e.g., Kubernetes/ECS). <br> **Inference Service:** Deploy the Step 4 classification logic as a low-latency **microservice** accessible via API.<br> **Logging & Alerting:** Set up comprehensive logging and implement basic health checks and alerts (e.g., if the outlier rate spikes). |
 | **Phase 6: Advanced Tuning & Robustness** | **Model Drift and Edge Case Handling** | 1 - 2 Weeks | **Advanced Hyperparameter Search:** Use GridSearchCV/Bayesian Optimization to find the optimal $\mathbf{\epsilon}$ and $\mathbf{min\_samples}$ across the full 10k dataset. <br> **Drift Detection:** Implement metrics to monitor the stability of the **Anomaly Threshold ($\mathbf{\Theta}$)** and automatically alert if significant model drift is detected. <br> **Final Documentation:** Complete detailed runbooks and maintenance guides. |
 
-### **Total Estimated Duration for Future Work: 9 to 12 Weeks**
+### Total Estimated Duration for Future Work: 9 to 12 Weeks
 
 This duration emphasizes that building a robust system that can reliably process and maintain its intelligence over a continuous data stream is a multi-month engineering effort, even after the core ML algorithm is proven.
 
