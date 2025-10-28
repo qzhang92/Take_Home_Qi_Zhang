@@ -342,4 +342,61 @@ This step uses the established groups to handle the new file $101.txt$.
     # print("\nFinal Result Summary:", result_dict)
     ```
 
+# Reclustering
+The reclustering step provides the mechanism for model evolution and addresses the limitations of the initial DBSCAN run. As we get more and more files from input, there will definitely new files that are not part of the original groups. In this cases, outliers will become more and more so we need to recluster.
+1. **Data Preparation and Full Retraining:** This section loads the expanded dataset and re-runs both the Word2Vec model training and the document embedding generation.
+    ```
+    # Assume functions and constants from Step 2 (e.g., custom_tokenizer, EMBEDDING_DIM) are available.
+
+    def load_all_data_for_retraining():
+        """
+        Simulates loading the original 100 files AND all files from the Outlier Queue.
+        Returns: (list of file tokens, list of raw file contents)
+        """
+        # Placeholder: In a real system, this would fetch files from a database/storage.
+        # For this example, we assume we get a new, larger list of tokens:
+        
+        # Simulating 100 initial files + 10 new outliers = 110 files
+        return [
+            ['MOV', 'EAX', '10'], 
+            ['PUSH', 'EBP'], 
+            # ... up to 110 documents ... 
+            ['NEW_OP', 'XYZ']
+        ] 
+
+    def perform_full_retraining():
+        
+        print("\n--- Starting Model Retraining (Full Batch) ---")
+        
+        # 1. Load the entire expanded corpus
+        new_corpus_tokens = load_all_data_for_retraining()
+        
+        if not new_corpus_tokens:
+            print("Error: Expanded corpus is empty.")
+            return None, None, None
+
+        # 2. Re-train the Word2Vec model on the larger corpus
+        # This captures new vocabulary and updates all existing vectors
+        new_model = Word2Vec(
+            sentences=new_corpus_tokens, 
+            vector_size=EMBEDDING_DIM, 
+            window=5, 
+            min_count=1, 
+            workers=4
+        )
+        new_model.init_sims(replace=True) 
+        print(f"Word2Vec Retrained. New Vocabulary Size: {len(new_model.wv.key_to_index)}")
+        
+        # 3. Re-generate the full feature matrix X'
+        X_prime = np.array([
+            generate_document_vector(tokens, new_model) 
+            for tokens in new_corpus_tokens
+        ])
+        
+        print(f"New Feature Matrix X' Generated. Shape: {X_prime.shape}")
+        return new_model, X_prime, new_corpus_tokens
+    ```
+
+
+
 This detailed plan now ensures continuity from feature selection through the final classification goal.
